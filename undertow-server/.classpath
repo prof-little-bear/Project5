@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="target/classes" path="src/main/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/mitayun/Downloads/undertow-websockets-jsr-1.2.0.Beta9.jar"/>
-	<classpathentry kind="lib" path="/Users/mitayun/Downloads/undertow-servlet-1.2.0.Beta9.jar"/>
-	<classpathentry kind="lib" path="/Users/mitayun/Downloads/undertow-core-1.2.0.Beta9.jar"/>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes" including="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/undertow/undertow-core/1.0.1.Final/undertow-core-1.0.1.Final.jar" sourcepath="M2_REPO/io/undertow/undertow-core/1.0.1.Final/undertow-core-1.0.1.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA.jar" sourcepath="M2_REPO/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/org/jboss/logging/jboss-logging/3.1.4.GA/jboss-logging-3.1.4.GA-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/xnio/xnio-api/3.2.0.Final/xnio-api-3.2.0.Final.jar" sourcepath="M2_REPO/org/jboss/xnio/xnio-api/3.2.0.Final/xnio-api-3.2.0.Final-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/org/jboss/xnio/xnio-api/3.2.0.Final/xnio-api-3.2.0.Final-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/xnio/xnio-nio/3.2.0.Final/xnio-nio-3.2.0.Final.jar" sourcepath="M2_REPO/org/jboss/xnio/xnio-nio/3.2.0.Final/xnio-nio-3.2.0.Final-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/org/jboss/xnio/xnio-nio/3.2.0.Final/xnio-nio-3.2.0.Final-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/io/undertow/undertow-servlet/1.0.1.Final/undertow-servlet-1.0.1.Final.jar" sourcepath="M2_REPO/io/undertow/undertow-servlet/1.0.1.Final/undertow-servlet-1.0.1.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/servlet/jboss-servlet-api_3.1_spec/1.0.0.Final/jboss-servlet-api_3.1_spec-1.0.0.Final.jar" sourcepath="M2_REPO/org/jboss/spec/javax/servlet/jboss-servlet-api_3.1_spec/1.0.0.Final/jboss-servlet-api_3.1_spec-1.0.0.Final-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/org/jboss/spec/javax/servlet/jboss-servlet-api_3.1_spec/1.0.0.Final/jboss-servlet-api_3.1_spec-1.0.0.Final-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/jboss/spec/javax/annotation/jboss-annotations-api_1.2_spec/1.0.0.Final/jboss-annotations-api_1.2_spec-1.0.0.Final.jar" sourcepath="M2_REPO/org/jboss/spec/javax/annotation/jboss-annotations-api_1.2_spec/1.0.0.Final/jboss-annotations-api_1.2_spec-1.0.0.Final-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/org/jboss/spec/javax/annotation/jboss-annotations-api_1.2_spec/1.0.0.Final/jboss-annotations-api_1.2_spec-1.0.0.Final-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/mitayun/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
 </classpath>

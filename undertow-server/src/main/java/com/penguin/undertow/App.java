@@ -12,6 +12,7 @@ import io.undertow.server.HttpHandler;
 public class App {
 
 	static final String Q1_PATH = "/q1";
+	// TODO: change port do 80 before deploying
 	static final int SERVER_PORT = 8080;
 	static final String SERVER_IP = "0.0.0.0";
 
