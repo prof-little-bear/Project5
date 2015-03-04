@@ -8,7 +8,9 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.FastDateFormat;
 
@@ -20,9 +22,29 @@ import org.apache.commons.lang.time.FastDateFormat;
 public class HeartBeatHandler implements HttpHandler {
 
   /**
+   * LRU Cache implementation.
+   *
+   * @author mitayun
+   */
+  public class Cache<K, V> extends LinkedHashMap<K, V> {
+
+    private final int cache_size;
+
+    public Cache(final int size) {
+      super(size + 1, 1f, true);
+      cache_size = size;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Entry<K, V> eldest) {
+      return size() > cache_size;
+    }
+  }
+
+  /**
    * Static reference to the descryption mapping
    */
-  private static Map<Integer, Map<Integer, Integer>> sSpiralMap = new HashMap<Integer, Map<Integer, Integer>>();
+  private static Map<Integer, int[]> sSpiralMap = new HashMap<Integer, int[]>();
 
   /**
    * Preload up to 10x10 matrices
@@ -46,6 +68,8 @@ public class HeartBeatHandler implements HttpHandler {
   private static final String ID3 = "0053-1858-2243"; // Ji
   private static final String ID4 = "3818-9577-0956"; // Kaifu
 
+  private static String sName = null;
+
   /**
    * Keys for http params
    */
@@ -59,6 +83,18 @@ public class HeartBeatHandler implements HttpHandler {
       "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773");
   private static final BigInteger MODULAR_FACTOR = new BigInteger("25");
 
+  public static void init() {
+    for (int i = 1; i < 11; i++) {
+      sSpiralMap.put(i, generateRevSpiralMapping(i));
+    }
+  }
+
+  private final Cache<BigInteger, Integer> keyCache = new Cache<BigInteger, Integer>(
+      1000);
+
+  public static int keyHit = 0;
+  public static int messageHit = 0;
+
   /**
    * Main function for handling HTTP request
    */
@@ -67,41 +103,47 @@ public class HeartBeatHandler implements HttpHandler {
     // Get parameters
     Deque<String> xys = exchange.getQueryParameters().get(KEY_XY);
     BigInteger xy = new BigInteger(xys.peekFirst());
-    BigInteger y = xy.divide(X);
-    int z = 1 + y.mod(MODULAR_FACTOR).intValue();
+
+    int z = 0;
+    if (keyCache.containsKey(xy)) {
+      keyHit++;
+      z = keyCache.get(xy);
+    } else {
+      BigInteger y = xy.divide(X);
+      z = 1 + y.mod(MODULAR_FACTOR).intValue();
+      keyCache.put(xy, z);
+    }
 
     Deque<String> messages = exchange.getQueryParameters().get(KEY_MESSAGE);
 
     // Send response back
     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
     exchange.getResponseSender().send(getResponse(z, messages.peekFirst()));
+
+    exchange.endExchange();
   }
 
   private String getResponse(int z, String message) {
     return getName() + getTimeStamp() + getDecryptedMessage(z, message);
   }
 
-  private String getDecryptedMessage(int z, String message) {
-    return decryptMessage(z, message);
-  }
-
-  private static Map<Integer, Integer> generateRevSpiralMapping(int n) {
-    Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+  private static int[] generateRevSpiralMapping(int n) {
+    int[] result = new int[n * n];
 
     int k = 0;
     int top = 0, bottom = n - 1, left = 0, right = n - 1;
     while (left < right && top < bottom) {
       for (int j = left; j < right; j++) {
-        map.put(top * n + j, k++);
+        result[top * n + j] = k++;
       }
       for (int i = top; i < bottom; i++) {
-        map.put(i * n + right, k++);
+        result[i * n + right] = k++;
       }
       for (int j = right; j > left; j--) {
-        map.put(bottom * n + j, k++);
+        result[bottom * n + j] = k++;
       }
       for (int i = bottom; i > top; i--) {
-        map.put(i * n + left, k++);
+        result[i * n + left] = k++;
       }
       left++;
       right--;
@@ -109,15 +151,15 @@ public class HeartBeatHandler implements HttpHandler {
       bottom--;
     }
     if (n % 2 != 0) {
-      map.put(n / 2 * n + n / 2, k++);
+      result[n / 2 * n + n / 2] = k++;
     }
-    return map;
+    return result;
   }
 
-  private static String decryptMessage(int z, String input) {
+  private static String getDecryptedMessage(int z, String input) {
     int length = input.length();
     int n = (int) Math.sqrt(length);
-    Map<Integer, Integer> map = null;
+    int[] map = null;
     if (sSpiralMap.containsKey(n)) {
       map = sSpiralMap.get(n);
     } else {
@@ -131,7 +173,7 @@ public class HeartBeatHandler implements HttpHandler {
     for (int i = 0; i < length; i++) {
       char c = inputArray[i];
       int factor = c - 'A' < z ? z - 26 : z;
-      outputArray[map.get(i)] = (char) (c - factor);
+      outputArray[map[i]] = (char) (c - factor);
     }
 
     return String.valueOf(outputArray) + "\n";
@@ -143,6 +185,9 @@ public class HeartBeatHandler implements HttpHandler {
   }
 
   private static String getName() {
-    return ID_TEAM + "," + ID1 + "," + ID2 + "," + ID3 + "," + ID4 + "\n";
+    if (sName == null) {
+      sName = ID_TEAM + "," + ID1 + "," + ID2 + "," + ID3 + "," + ID4 + "\n";
+    }
+    return sName;
   }
 }

@@ -2,6 +2,7 @@ package com.penguin.undertow;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;
+import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
 
 /**
@@ -13,10 +14,11 @@ public class App {
 
   static final String Q1_PATH = "/q1";
   // TODO: change port do 80 before deploying
-  static final int SERVER_PORT = 8080;
+  static final int SERVER_PORT = 80;
   static final String SERVER_IP = "0.0.0.0";
 
   public static void main(String[] args) {
+    HeartBeatHandler.init();
 
     // Create question 1 heartbeat handler
     HttpHandler heartbeathandler = new HeartBeatHandler();
@@ -27,7 +29,10 @@ public class App {
 
     // Set question 1 handler
     builder
-        .setHandler(Handlers.path().addPrefixPath(Q1_PATH, heartbeathandler));
+        .setHandler(Handlers.path().addPrefixPath(Q1_PATH, heartbeathandler))
+        // .setIoThreads(2)
+        .setWorkerThreads(180)
+        .setServerOption(UndertowOptions.ALWAYS_SET_KEEP_ALIVE, false);
 
     // Build and start the server
     Undertow server = builder.build();
